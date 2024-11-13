@@ -1,0 +1,39 @@
+{
+    "name": "Ollama",
+    "slug": "ollama",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-10-27",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "11434",
+    "documentation": "https://github.com/ollama/ollama/blob/main/docs/README.md",
+    "website": "https://ollama.com",
+    "logo": "https://private-user-images.githubusercontent.com/3325447/254932576-0d0b44e2-8f4a-4e99-9b52-a5c1c741c8f7.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzE0NTY2ODgsIm5iZiI6MTczMTQ1NjM4OCwicGF0aCI6Ii8zMzI1NDQ3LzI1NDkzMjU3Ni0wZDBiNDRlMi04ZjRhLTRlOTktOWI1Mi1hNWMxYzc0MWM4ZjcucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI0MTExMyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNDExMTNUMDAwNjI4WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9YzExNTNkN2Y0MWUxYjM2Njg5NGQ2MDVkNTBlYTFkNmM3NTkwOTI5MjhiODNmMjQzNmMzNmU0ODMyZjkyOTg5NCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.s_HgoxcF4JKB_7EWAGH_FxkPMraIwzQQ6Bc-u9WTEPc",
+    "description": "Get up and running with large language models (LLMs). Run Llama 3.2, Phi 3, Mistral, Gemma 2, and other models. This script will install libraries for Intel GPU hardware acceleration.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/ollama.sh",
+            "resources": {
+                "cpu": "4",
+                "ram": "4096",
+                "hdd": "24",
+                "os": "ubuntu",
+                "version": "22.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Due to the size of the models, 24GB of storage is required at a minimum.",
+            "type": "warning"
+        }
+    ]
+}
