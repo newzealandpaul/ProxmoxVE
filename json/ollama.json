@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Due to the size of the models, 24GB of storage is required at a minimum.",
+            "text": "Models that can be downloaded with Ollama range in size from small to very large. You may need to resize the container's storage to accomodate them.",
             "type": "warning"
         }
     ]
