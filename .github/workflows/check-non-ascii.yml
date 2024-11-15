@@ -20,17 +20,29 @@ jobs:
         # Use the correct name for your default branch
         default_branch=nzp-unicode-test
         monitored_dirs="./ct ./install ./misc"
+
+        echo "Default branch: $default_branch"
+        echo "Monitored directories: $monitored_dirs"
         
         for dir in $monitored_dirs; do
+          echo "Checking directory: $dir"
           for file in $(git diff --name-only origin/$default_branch...HEAD -- "$dir/*"); do
+            echo "Checking file: $file"
             if file --mime --brief "$file" | grep -q 'text/'; then
+              echo "File is a text file: $file"
               if grep --quiet --perl-regexp '[^\x00-\x7F]' "$file"; then
+                echo "File contains non-ASCII characters: $file"
                 files_with_non_ascii="$files_with_non_ascii $file"
+              else
+                echo "File does not contain non-ASCII characters: $file"
               fi
+            else
+              echo "File is not a text file: $file"
             fi
           done
         done
-        
+
+        echo "Files with non-ASCII characters: $files_with_non_ascii"
         echo "files=$files_with_non_ascii" >> $GITHUB_ENV
 
     - name: Create comment
