@@ -17,13 +17,22 @@ jobs:
       id: find_non_ascii
       run: |
         files_with_non_ascii=""
+        changed_files=""
         # Use the correct name for your default branch
         default_branch=nzp-unicode-test
+        current_branch=$(git rev-parse --abbrev-ref HEAD)
         monitored_dirs="./ct ./install ./misc"
 
         echo "Default branch: $default_branch"
+        echo "Current branch: $current_branch"
         echo "Monitored directories: $monitored_dirs"
-        
+
+        echo "Comparing branches: origin/$default_branch...HEAD"
+
+        # List all changed files in the PR
+        changed_files=$(git diff --name-only origin/$default_branch...HEAD)
+        echo "Changed files in the PR:\n$changed_files"
+
         for dir in $monitored_dirs; do
           echo "Checking directory: $dir"
           for file in $(git diff --name-only origin/$default_branch...HEAD -- "$dir/*"); do
