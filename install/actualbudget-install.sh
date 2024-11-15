@@ -12,6 +12,7 @@ catch_errors
 setting_up_container
 network_check
 update_os
+echo "♥️"
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y curl
