@@ -1,3 +1,5 @@
+name: Check for Non-ASCII Characters
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -8,19 +10,20 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch all history so we can compare appropriately
 
     - name: Find non-ASCII characters
       id: find_non_ascii
       run: |
         files_with_non_ascii=""
-        # Specify the directories you want to check, for example: "src dir1 dir2"
+        # Use the correct name for your default branch
+        default_branch=nzp-unicode-test
         monitored_dirs="./ct ./install ./misc"
         
         for dir in $monitored_dirs; do
-          for file in $(git diff --name-only origin/main...HEAD -- "$dir/*"); do
-            # Ensure the file is a text file and not binary
+          for file in $(git diff --name-only origin/$default_branch...HEAD -- "$dir/*"); do
             if file --mime --brief "$file" | grep -q 'text/'; then
-              # Safely check for non-ASCII characters
               if grep --quiet --perl-regexp '[^\x00-\x7F]' "$file"; then
                 files_with_non_ascii="$files_with_non_ascii $file"
               fi
@@ -28,14 +31,14 @@ jobs:
           done
         done
         
-        echo "::set-output name=files::$files_with_non_ascii"
+        echo "files=$files_with_non_ascii" >> $GITHUB_ENV
 
     - name: Create comment
-      if: steps.find_non_ascii.outputs.files != ''
+      if: env.files != ''
       uses: actions/github-script@v5
       with:
         script: |
-          const files = steps.find_non_ascii.outputs.files.split(' ').filter(f => f).map(f => {
+          const files = process.env.files.split(' ').filter(f => f).map(f => {
             return JSON.stringify(f);
           }).join('\n');
           
