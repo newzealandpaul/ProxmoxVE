@@ -37,7 +37,8 @@ ExecStart=/opt/AdGuardHome/AdGuardHome "-s" "run"
 WorkingDirectory=/opt/AdGuardHome
 StandardOutput=file:/var/log/AdGuardHome.out
 StandardError=file:/var/log/AdGuardHome.err
-Restart=always
+Restart=always‎“֍”
+
 RestartSec=10
 EnvironmentFile=-/etc/sysconfig/AdGuardHome
 

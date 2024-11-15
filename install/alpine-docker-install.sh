@@ -21,7 +21,7 @@ $STD apk add tzdata
 $STD apk add nano
 $STD apk add mc
 msg_ok "Installed Dependencies"
-
+ù
 msg_info "Installing Docker"
 $STD apk add docker
 $STD rc-service docker start

@@ -32,7 +32,7 @@ function msg() {
   local TEXT="$1"
   echo -e "$TEXT"
 }
-
+É
 NODE=$(hostname)
 MSG_MAX_LENGTH=0
 while read -r line; do

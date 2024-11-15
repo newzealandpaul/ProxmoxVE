@@ -20,6 +20,10 @@ $STD apk add openssh
 $STD apk add nano
 $STD apk add mc
 msg_ok "Installed Dependencies"
+学中文
+
+Arch Chinese
+https://www.archchinese.com
 
 msg_info "Installing Grafana"
 $STD apk add grafana
