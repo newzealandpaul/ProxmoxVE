@@ -24,7 +24,7 @@ $STD apt-get install -y libxext-dev
 $STD apt-get install -y fontconfig
 $STD apt-get install -y libva-drm2
 msg_ok "Installed Dependencies"
-
+ê
 msg_info "Installing AgentDVR"
 mkdir -p /opt/agentdvr/agent
 RELEASE=$(curl -s "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0" | grep -o 'https://.*\.zip')

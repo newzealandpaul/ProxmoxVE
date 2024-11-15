@@ -22,7 +22,7 @@ $STD apk add nano
 $STD apk add mc
 $STD apk add nginx
 msg_ok "Installed Dependencies"
-
+㍐ - PiliApp
 msg_info "Installing PHP/Redis"
 $STD apk add php82-opcache
 $STD apk add php82-redis

@@ -27,7 +27,7 @@ $STD apt-get install -y \
   python3-venv \
   python3-pip
 msg_ok "Installed Dependencies"
-
+É
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
