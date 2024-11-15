@@ -1,0 +1,48 @@
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-non-ascii:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Find non-ASCII characters
+      id: find_non_ascii
+      run: |
+        files_with_non_ascii=""
+        # Specify the directories you want to check, for example: "src dir1 dir2"
+        monitored_dirs="./ct ./install ./misc"
+        
+        for dir in $monitored_dirs; do
+          for file in $(git diff --name-only origin/main...HEAD -- "$dir/*"); do
+            # Ensure the file is a text file and not binary
+            if file --mime --brief "$file" | grep -q 'text/'; then
+              # Safely check for non-ASCII characters
+              if grep --quiet --perl-regexp '[^\x00-\x7F]' "$file"; then
+                files_with_non_ascii="$files_with_non_ascii $file"
+              fi
+            fi
+          done
+        done
+        
+        echo "::set-output name=files::$files_with_non_ascii"
+
+    - name: Create comment
+      if: steps.find_non_ascii.outputs.files != ''
+      uses: actions/github-script@v5
+      with:
+        script: |
+          const files = steps.find_non_ascii.outputs.files.split(' ').filter(f => f).map(f => {
+            return JSON.stringify(f);
+          }).join('\n');
+          
+          if (files) {
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `⚠️ Warning: The following files contain non-ASCII characters:\n${files.replace(/"/g, '')}`
+            });
+          }
