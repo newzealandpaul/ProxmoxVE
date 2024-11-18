@@ -201,3 +201,52 @@ EOF
   echo "bash -c \"\$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 }
+
+# This function downloads the latest release of a GitHub repository
+download_latest_github_release() {
+  local user="$1"
+  local repo="$2"
+
+  local release_info=$(curl -s "https://api.github.com/repos/$user/$repo/releases/latest")
+
+  local tarball_url=$(echo "$release_info" | grep '"tarball_url":' | cut -d '"' -f 4)
+
+  if [ -z "$tarball_url" ]; then
+    msg_error "Could not fetch the latest release tarball URL."
+    exit 1
+  fi
+
+  local output_file="${repo}-latest.tar.gz"
+  curl -s -L "$tarball_url" -o "$output_file"
+
+  if [ $? -ne 0 ]; then
+    msg_error "Failed to download the release tarball."
+    exit 1
+  fi
+
+  echo "$output_file"
+}
+
+# This function extracts a GitHub release tarball into a target directory
+extract_github_tarball() {
+  local tarball="$1"
+  local target_root="$2"
+
+  local temp_dir=$(mktemp -d)
+  tar -xf "$tarball" -C "$temp_dir"
+
+  if [ $? -ne 0 ]; then
+    msg_error "Failed to extract the release tarball."
+    rm -rf "$temp_dir"
+    exit 1
+  fi
+
+  # Find the root directory inside the temp directory
+  local extracted_root=$(find "$temp_dir" -mindepth 1 -maxdepth 1 -type d)
+
+  # Create the target directory and move the files
+  mkdir -p "$target_root"
+  mv "$extracted_root"/* "$target_root"
+
+  rm -rf "$temp_dir"
+}
