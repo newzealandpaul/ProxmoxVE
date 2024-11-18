@@ -19,7 +19,7 @@ jobs:
         files_with_non_ascii=""
         changed_files=""
         # Use the correct name for your default branch
-        default_branch=nzp-unicode-test
+        default_branch=nzp-unicode
         current_branch=$(git rev-parse --abbrev-ref HEAD)
         monitored_dirs="./ct ./install ./misc"
 
