@@ -203,50 +203,21 @@ EOF
 }
 
 # This function downloads the latest release of a GitHub repository
-download_latest_github_release() {
+github_download_latest_release() {
   local user="$1"
   local repo="$2"
-
-  local release_info=$(curl -s "https://api.github.com/repos/$user/$repo/releases/latest")
-
-  local tarball_url=$(echo "$release_info" | grep '"tarball_url":' | cut -d '"' -f 4)
-
-  if [ -z "$tarball_url" ]; then
-    msg_error "Could not fetch the latest release tarball URL."
-    exit 1
-  fi
-
-  local output_file="${repo}-latest.tar.gz"
-  curl -s -L "$tarball_url" -o "$output_file"
-
-  if [ $? -ne 0 ]; then
-    msg_error "Failed to download the release tarball."
-    exit 1
-  fi
-
-  echo "$output_file"
+  local output_file="$3"
+  local tarball_url=$($STD wget -qLO - "https://api.github.com/repos/$user/$repo/releases/latest" | grep '"tarball_url":' | cut -d '"' -f 4)
+  $STD wget -qLO "$output_file" "$tarball_url"
 }
 
 # This function extracts a GitHub release tarball into a target directory
-extract_github_tarball() {
-  local tarball="$1"
-  local target_root="$2"
-
-  local temp_dir=$(mktemp -d)
-  tar -xf "$tarball" -C "$temp_dir"
-
-  if [ $? -ne 0 ]; then
-    msg_error "Failed to extract the release tarball."
-    rm -rf "$temp_dir"
-    exit 1
-  fi
-
-  # Find the root directory inside the temp directory
-  local extracted_root=$(find "$temp_dir" -mindepth 1 -maxdepth 1 -type d)
-
-  # Create the target directory and move the files
-  mkdir -p "$target_root"
-  mv "$extracted_root"/* "$target_root"
-
-  rm -rf "$temp_dir"
+github_extract_latest_release() {
+  local user="$1"
+  local repo="$2"
+  local output_directory="$3"
+  mkdir -p "$output_directory"
+  github_download_latest_release "$user" "$repo" "/tmp/$repo.tar.gz"
+  tar -xzf "/tmp/$repo.tar.gz" -C "$output_directory" --strip-components 1
+  rm "/tmp/$repo.tar.gz"
 }
